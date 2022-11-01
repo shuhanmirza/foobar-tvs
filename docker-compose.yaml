@@ -1,5 +1,14 @@
 version: '3.1'
 services:
+  goserver:
+    build:
+      context: .
+      dockerfile: DockerFiles/GoDockerFile
+    restart: unless-stopped
+    container_name: goserver-foobar
+    ports:
+       - "9000:9000"
+       
   vueserver:
     build:
       context: .
