@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  vueserver:
+    build:
+      context: .
+      dockerfile: DockerFiles/VueDockerFile
+    restart: unless-stopped
+    container_name: vueserver-foobar
+    
+    ports:
+       - "8080:8080"
+
+
+networks:
+  default:
+    external:
+      name: mock-network
+
+volumes:
+  data:
