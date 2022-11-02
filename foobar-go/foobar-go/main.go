@@ -36,6 +36,12 @@ func main() {
 	configurationRoute := routes.NewConfigurationRoute(configurationController, ginRouter)
 	configurationRoute.Setup()
 
+	//// Event Feature
+	eventService := service.NewEventService(store)
+	eventController := controller.NewEventController(eventService)
+	eventRoute := routes.NewEventRoute(eventController, ginRouter)
+	eventRoute.Setup()
+
 	ServerAddress := os.Getenv("SERVER_ADDRESS")
 	err = ginRouter.Gin.Run(ServerAddress)
 	if err != nil {
