@@ -7,8 +7,9 @@ CREATE TABLE "locations" (
 CREATE TABLE "events" (
                           "id" bigserial PRIMARY KEY,
                           "location_id" bigint NOT NULL,
-                          "name" bigint NOT NULL,
-                          "datetime" timestamptz NOT NULL DEFAULT (now())
+                          "name" varchar NOT NULL,
+                          "datetime" bigint NOT NULL,
+                          "created_at" timestamptz NOT NULL DEFAULT (now())
 );
 
 CREATE INDEX ON "events" ("location_id");
