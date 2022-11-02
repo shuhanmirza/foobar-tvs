@@ -15,6 +15,11 @@ You can the url of the database design [here](https://dbdiagram.io/d/63613e8e517
 docker network create mock-network
 ```
 
+- deploy containers
+```
+docker-compose up -d
+```
+
 - table migration up
 ```
 migrate -path db/migration -database "postgresql://root:secret@localhost:5432/foobar-db?sslmode=disable" -verbose up  
