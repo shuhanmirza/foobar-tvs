@@ -35,10 +35,13 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
-                    <v-text-field
+                    <v-select
                         v-model="editedItem.location"
+                        :items="locationList"
+                        item-text="name"
+                        item-value="id"
                         label="Location"
-                    ></v-text-field>
+                    ></v-select>
                   </v-col>
                   <v-col cols="12" sm="6" md="4">
                     <v-text-field
@@ -114,6 +117,7 @@ export default {
       {text: 'Actions', value: 'actions', sortable: false},
     ],
     eventList: [],
+    locationList : [],
     editedItemId: -1,
     editedItem: {
       name: '', location: 0, datetime: 0,
@@ -123,6 +127,7 @@ export default {
   }),
   methods: {
     initialize() {
+      this.getLocationList()
       this.eventList = [
         {
           name: 'test event 1',
@@ -210,8 +215,8 @@ export default {
     },
     getLocationList() {
       this.$API_CLIENT.get(this.$API_PATH.LOCATION_LIST).then(({data}) => {
-        console.log(data)
-        this.url = data.url
+        this.locationList = data.location_list
+        console.log(this.locationList)
       }).catch(({response}) => {
         console.log(response)
       });
@@ -233,7 +238,6 @@ export default {
 
   created() {
     this.initialize()
-    this.getLocationList()
   }
 }
 </script>
