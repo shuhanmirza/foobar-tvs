@@ -1,16 +1,16 @@
 <template>
   <div class="home">
-    <div class="input-div">
-
-    </div>
+    <EventTable></EventTable>
   </div>
 </template>
 
 <script>
-
+import EventTable from "@/components/EventTable";
 export default {
   name: 'HomeView',
-  components: {}
+  components: {
+    EventTable
+  }
 }
 </script>
 
