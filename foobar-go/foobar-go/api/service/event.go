@@ -72,3 +72,34 @@ func (s EventService) GetEventById(ctx *gin.Context, eventId int64) (getEventByI
 
 	return getEventByIdResponse, err
 }
+
+func (s EventService) GetEventListByPage(ctx *gin.Context, request structs.GetEventListByPageRequest) (response structs.GetEventListByPageResponse, err error) {
+	eventList, err := s.store.Queries.GetEventListByOffsetLimit(ctx, db.GetEventListByOffsetLimitParams{
+		Offset: request.PageNumber * request.PageSize,
+		Limit:  request.PageSize,
+	})
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			response = structs.GetEventListByPageResponse{Events: nil}
+			return response, nil
+		}
+
+		log.Println("error while reading events")
+		log.Println(err)
+		return response, err
+	}
+
+	var eventJsonList []structs.EventJson
+
+	for _, event := range eventList {
+		eventJsonList = append(eventJsonList, structs.EventJson{
+			Name:     event.Name,
+			Location: event.Location,
+			Datetime: event.Datetime,
+		})
+	}
+
+	response = structs.GetEventListByPageResponse{Events: eventJsonList}
+	return response, err
+}

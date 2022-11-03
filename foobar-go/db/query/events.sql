@@ -22,9 +22,15 @@ WHERE events.id = $1
 LIMIT 1;
 
 -- name: GetEventListByOffsetLimit :many
-SELECT *
+SELECT events.id         as id,
+       events.name       as name,
+       "datetime",
+       location_id,
+       locations.name    as location,
+       events.created_at as created_at
 FROM events
-ORDER BY id
+         INNER JOIN locations on locations.id = events.location_id
+ORDER BY events.created_at
 OFFSET $1 LIMIT $2;
 
 -- name: UpdateEvent :one

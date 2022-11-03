@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"foobar-go/api/service"
 	"foobar-go/api/structs"
 	"foobar-go/util"
@@ -24,9 +23,7 @@ func (c EventController) CreateEvent(ctx *gin.Context) {
 
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
-		fmt.Println("validation error")
-		fmt.Println(err)
-		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		util.HandleCommonValidationError(ctx, err)
 		return
 	}
 
@@ -42,9 +39,7 @@ func (c EventController) CreateEvent(ctx *gin.Context) {
 func (c EventController) GetEventById(ctx *gin.Context) {
 	var request structs.GetEventByIdRequest
 	if err := ctx.ShouldBindUri(&request); err != nil {
-		fmt.Println("validation error")
-		fmt.Println(err)
-		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		util.HandleCommonValidationError(ctx, err)
 		return
 	}
 
@@ -55,4 +50,21 @@ func (c EventController) GetEventById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, response)
+}
+
+func (c EventController) GetEventListByPage(ctx *gin.Context) {
+	var request structs.GetEventListByPageRequest
+	if err := ctx.ShouldBindQuery(&request); err != nil {
+		util.HandleCommonValidationError(ctx, err)
+		return
+	}
+
+	response, err := c.eventService.GetEventListByPage(ctx, request)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+
 }

@@ -67,9 +67,15 @@ func (q *Queries) GetEventById(ctx context.Context, id int64) (Events, error) {
 }
 
 const getEventListByOffsetLimit = `-- name: GetEventListByOffsetLimit :many
-SELECT id, location_id, name, datetime, created_at
+SELECT events.id         as id,
+       events.name       as name,
+       "datetime",
+       location_id,
+       locations.name    as location,
+       events.created_at as created_at
 FROM events
-ORDER BY id
+         INNER JOIN locations on locations.id = events.location_id
+ORDER BY events.created_at
 OFFSET $1 LIMIT $2
 `
 
@@ -78,20 +84,30 @@ type GetEventListByOffsetLimitParams struct {
 	Limit  int32 `json:"limit"`
 }
 
-func (q *Queries) GetEventListByOffsetLimit(ctx context.Context, arg GetEventListByOffsetLimitParams) ([]Events, error) {
+type GetEventListByOffsetLimitRow struct {
+	ID         int64     `json:"id"`
+	Name       string    `json:"name"`
+	Datetime   int64     `json:"datetime"`
+	LocationID int64     `json:"location_id"`
+	Location   string    `json:"location"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+
+func (q *Queries) GetEventListByOffsetLimit(ctx context.Context, arg GetEventListByOffsetLimitParams) ([]GetEventListByOffsetLimitRow, error) {
 	rows, err := q.db.QueryContext(ctx, getEventListByOffsetLimit, arg.Offset, arg.Limit)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Events{}
+	items := []GetEventListByOffsetLimitRow{}
 	for rows.Next() {
-		var i Events
+		var i GetEventListByOffsetLimitRow
 		if err := rows.Scan(
 			&i.ID,
-			&i.LocationID,
 			&i.Name,
 			&i.Datetime,
+			&i.LocationID,
+			&i.Location,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err

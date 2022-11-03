@@ -23,5 +23,6 @@ func (r EventRoute) Setup() {
 	{
 		event.POST("/", r.Controller.CreateEvent)
 		event.GET("/:id", r.Controller.GetEventById)
+		event.GET("/", r.Controller.GetEventListByPage)
 	}
 }
