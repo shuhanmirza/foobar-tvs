@@ -42,7 +42,8 @@ WHERE id = $1
 RETURNING *;
 
 
--- name: DeleteEvent :exec
+-- name: DeleteEvent :one
 DELETE
 FROM events
-WHERE id = $1;
+WHERE id = $1
+RETURNING *;

@@ -90,3 +90,20 @@ func (c EventController) UpdateEvent(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (c EventController) DeleteEvent(ctx *gin.Context) {
+	var request structs.DeleteEventParamRequest
+
+	if err := ctx.ShouldBindUri(&request); err != nil {
+		util.HandleCommonValidationError(ctx, err)
+		return
+	}
+
+	response, err := c.eventService.DeleteEvent(ctx, request.EventId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}

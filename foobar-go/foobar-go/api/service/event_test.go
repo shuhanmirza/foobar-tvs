@@ -45,3 +45,13 @@ func TestEventService_UpdateEvent(t *testing.T) {
 	log.Println(response)
 	log.Println(err)
 }
+
+// TODO: write proper tests
+func TestEventService_DeleteEvent(t *testing.T) {
+	ctx, _ := gin.CreateTestContext(httptest.NewRecorder())
+
+	response, err := eventService.DeleteEvent(ctx, 42)
+
+	log.Println(response)
+	log.Println(err)
+}

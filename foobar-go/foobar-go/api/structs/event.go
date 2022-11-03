@@ -49,3 +49,11 @@ type UpdateEventRequest struct {
 type UpdateEventResponse struct {
 	Success bool `json:"success"`
 }
+
+type DeleteEventParamRequest struct {
+	EventId int64 `uri:"id" binding:"gte=0"`
+}
+
+type DeleteEventResponse struct {
+	Success bool `json:"success"`
+}

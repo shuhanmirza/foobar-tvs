@@ -25,5 +25,6 @@ func (r EventRoute) Setup() {
 		event.GET("/:id", r.Controller.GetEventById)
 		event.GET("/", r.Controller.GetEventListByPage)
 		event.PUT("/:id", r.Controller.UpdateEvent)
+		event.DELETE("/:id", r.Controller.DeleteEvent)
 	}
 }

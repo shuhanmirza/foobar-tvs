@@ -131,3 +131,21 @@ func (s EventService) UpdateEvent(ctx *gin.Context, eventId int64, request struc
 	response = structs.UpdateEventResponse{Success: true}
 	return response, err
 }
+
+func (s EventService) DeleteEvent(ctx *gin.Context, eventId int64) (response structs.DeleteEventResponse, err error) {
+	_, err = s.store.Queries.DeleteEvent(ctx, eventId)
+
+	if err != nil {
+		response = structs.DeleteEventResponse{Success: false}
+		if err == sql.ErrNoRows {
+			return response, &util.InvalidEventId{}
+		}
+		log.Println("error while deleting event")
+		log.Println(err)
+		return response, err
+	}
+
+	response = structs.DeleteEventResponse{Success: true}
+	return response, err
+
+}
