@@ -28,3 +28,4 @@ migrate -path db/migration -database "postgresql://root:secret@localhost:5432/fo
 
 ### Acknowledgment
 - [dbdiagram.io](https://dbdiagram.io)
+- [Blog of Umesh Chaudhury](https://dev.to/umschaudhary/blog-with-go-gin-mysql-and-docker-part-2-3k8n)
