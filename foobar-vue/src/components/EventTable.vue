@@ -13,72 +13,37 @@
             {{ tableTitle }}
           </v-card-title>
           <v-card-text style="margin-top: -12px">
-            List of Events! - <span class="text-button" @click="createItem()"> Create </span>
+            List of Events! - <span class="text-button" @click="showCreateItemDialog()"> Create </span>
           </v-card-text>
         </v-card>
 
         <v-divider/>
 
-        <v-dialog
-            v-model="createEventDialog"
-            max-width="500px"
-        >
+        <v-dialog v-model="createItemDialog" max-width="500px">
           <v-card>
             <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
+              <span>{{ createEventDialogTitle }}</span>
             </v-card-title>
 
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                  >
+                  <v-col cols="12" sm="6" md="4">
                     <v-text-field
                         v-model="editedItem.name"
-                        label="Dessert name"
+                        label="Name"
                     ></v-text-field>
                   </v-col>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                  >
+                  <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                        v-model="editedItem.calories"
-                        label="Calories"
+                        v-model="editedItem.location"
+                        label="Location"
                     ></v-text-field>
                   </v-col>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                  >
+                  <v-col cols="12" sm="6" md="4">
                     <v-text-field
-                        v-model="editedItem.fat"
-                        label="Fat (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                  >
-                    <v-text-field
-                        v-model="editedItem.carbs"
-                        label="Carbs (g)"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                      md="4"
-                  >
-                    <v-text-field
-                        v-model="editedItem.protein"
-                        label="Protein (g)"
+                        v-model="editedItem.datetime"
+                        label="Time"
                     ></v-text-field>
                   </v-col>
                 </v-row>
@@ -87,19 +52,11 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="close"
-              >
+              <v-btn color="blue darken-1" text @click="onCloseButtonClicked">
                 Cancel
               </v-btn>
-              <v-btn
-                  color="blue darken-1"
-                  text
-                  @click="save"
-              >
-                Save
+              <v-btn color="blue darken-1" text @click="onSaveButtonClick">
+                Create
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -148,7 +105,7 @@ export default {
   name: "EventTable",
   data: () => ({
     tableTitle: "Events",
-    createEventDialog: false,
+    createItemDialog: false,
     dialogDelete: false,
     headers: [
       {text: 'Name', align: 'start', sortable: false, value: 'name'},
@@ -157,21 +114,12 @@ export default {
       {text: 'Actions', value: 'actions', sortable: false},
     ],
     eventList: [],
-    editedIndex: -1,
+    editedItemId: -1,
     editedItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
+      name: '', location: 0, datetime: 0,
     },
     defaultItem: {
-      name: '',
-      calories: 0,
-      fat: 0,
-      carbs: 0,
-      protein: 0,
-    },
+      name: '', location: 0, datetime: 0,},
   }),
   methods: {
     initialize() {
@@ -199,31 +147,32 @@ export default {
       ]
     },
 
-    createItem() {
-      this.createEventDialog = true
+    showCreateItemDialog() {
+      this.editedItemId = -1
+      this.createItemDialog = true
     },
     editItem(item) {
-      this.editedIndex = this.eventList.indexOf(item)
+      this.editedItemId = this.eventList.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      this.createEventDialog = true
+      this.createItemDialog = true
     },
 
     deleteItem(item) {
-      this.editedIndex = this.eventList.indexOf(item)
+      this.editedItemId = this.eventList.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      this.eventList.splice(this.editedIndex, 1)
+      this.eventList.splice(this.editedItemId, 1)
       this.closeDelete()
     },
 
-    close() {
-      this.createEventDialog = false
+    onCloseButtonClicked() {
+      this.createItemDialog = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.editedItemId = -1
       })
     },
 
@@ -231,17 +180,33 @@ export default {
       this.dialogDelete = false
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
+        this.editedItemId = -1
       })
     },
 
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.eventList[this.editedIndex], this.editedItem)
+    onSaveButtonClick() {
+      if (this.editedItemId > -1) {
+        Object.assign(this.eventList[this.editedItemId], this.editedItem)
       } else {
+        this.createEventApi(this.editedItem)
         this.eventList.push(this.editedItem)
       }
-      this.close()
+      this.onCloseButtonClicked()
+    },
+    createEventApi(item){
+      console.log(item)
+      let payload = {
+        "name":"test event",
+        "location_id":5,
+        "datetime": 1667404666
+      }
+
+      this.$API_CLIENT.post(this.$API_PATH.CREATE_EVENT, payload).then(({data}) => {
+        console.log(data)
+        this.url = data.url
+      }).catch(({response}) => {
+        console.log(response)
+      });
     },
     getLocationList() {
       this.$API_CLIENT.get(this.$API_PATH.LOCATION_LIST).then(({data}) => {
@@ -253,13 +218,13 @@ export default {
     }
   },
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    createEventDialogTitle() {
+      return this.editedItemId === -1 ? 'Create Event' : 'Edit Event'
     },
   },
   watch: {
     dialog(val) {
-      val || this.close()
+      val || this.onCloseButtonClicked()
     },
     dialogDelete(val) {
       val || this.closeDelete()
@@ -278,6 +243,6 @@ export default {
 .text-button {
   color: blue;
   font-weight: bolder;
-  text-decoration: underline ;
+  text-decoration: underline;
 }
 </style>
