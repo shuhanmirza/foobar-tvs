@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <EventTable></EventTable>
+    <EventTable class="event-table"></EventTable>
   </div>
 </template>
 
@@ -15,5 +15,11 @@ export default {
 </script>
 
 <style scoped>
-
+.home{
+  padding: 10px;
+  background: #F7FBFC;
+}
+.event-table{
+  margin: 100px;
+}
 </style>
