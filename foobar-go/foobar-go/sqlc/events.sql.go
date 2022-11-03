@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 )
 
 const createEvent = `-- name: CreateEvent :one
@@ -47,7 +48,7 @@ func (q *Queries) DeleteEvent(ctx context.Context, id int64) error {
 
 const getEventById = `-- name: GetEventById :one
 SELECT id, location_id, name, datetime, created_at
-from events
+FROM events
 WHERE id = $1
 LIMIT 1
 `
@@ -67,7 +68,7 @@ func (q *Queries) GetEventById(ctx context.Context, id int64) (Events, error) {
 
 const getEventListByOffsetLimit = `-- name: GetEventListByOffsetLimit :many
 SELECT id, location_id, name, datetime, created_at
-from events
+FROM events
 ORDER BY id
 OFFSET $1 LIMIT $2
 `
@@ -104,6 +105,42 @@ func (q *Queries) GetEventListByOffsetLimit(ctx context.Context, arg GetEventLis
 		return nil, err
 	}
 	return items, nil
+}
+
+const getEventWithLocationById = `-- name: GetEventWithLocationById :one
+SELECT events.id         as id,
+       events.name       as name,
+       "datetime",
+       location_id,
+       locations.name    as location,
+       events.created_at as created_at
+FROM events
+         INNER JOIN locations on locations.id = events.location_id
+WHERE events.id = $1
+LIMIT 1
+`
+
+type GetEventWithLocationByIdRow struct {
+	ID         int64     `json:"id"`
+	Name       string    `json:"name"`
+	Datetime   int64     `json:"datetime"`
+	LocationID int64     `json:"location_id"`
+	Location   string    `json:"location"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+
+func (q *Queries) GetEventWithLocationById(ctx context.Context, id int64) (GetEventWithLocationByIdRow, error) {
+	row := q.db.QueryRowContext(ctx, getEventWithLocationById, id)
+	var i GetEventWithLocationByIdRow
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Datetime,
+		&i.LocationID,
+		&i.Location,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const updateEvent = `-- name: UpdateEvent :one

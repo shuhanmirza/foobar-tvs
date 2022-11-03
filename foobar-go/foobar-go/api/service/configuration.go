@@ -1,9 +1,9 @@
 package service
 
 import (
-	"context"
 	"foobar-go/api/structs"
 	"foobar-go/infrastructure"
+	"github.com/gin-gonic/gin"
 	"log"
 )
 
@@ -17,7 +17,7 @@ func NewConfigurationService(store *infrastructure.Store) ConfigurationService {
 	}
 }
 
-func (s ConfigurationService) GetLocationList(ctx context.Context) (locationListResponse structs.GetLocationListResponse, err error) {
+func (s ConfigurationService) GetLocationList(ctx *gin.Context) (locationListResponse structs.GetLocationListResponse, err error) {
 	locationList, err := s.store.Queries.ListLocations(ctx)
 	if err != nil {
 		log.Println("error while retrieving location list")

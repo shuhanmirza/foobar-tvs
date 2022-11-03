@@ -19,8 +19,9 @@ func NewEventRoute(eventController controller.EventController,
 }
 
 func (r EventRoute) Setup() {
-	configuration := r.Handler.Gin.Group("api/events")
+	event := r.Handler.Gin.Group("api/events")
 	{
-		configuration.POST("/", r.Controller.CreateEvent)
+		event.POST("/", r.Controller.CreateEvent)
+		event.GET("/:id", r.Controller.GetEventById)
 	}
 }

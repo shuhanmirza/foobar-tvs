@@ -5,13 +5,25 @@ RETURNING *;
 
 -- name: GetEventById :one
 SELECT *
-from events
+FROM events
 WHERE id = $1
+LIMIT 1;
+
+-- name: GetEventWithLocationById :one
+SELECT events.id         as id,
+       events.name       as name,
+       "datetime",
+       location_id,
+       locations.name    as location,
+       events.created_at as created_at
+FROM events
+         INNER JOIN locations on locations.id = events.location_id
+WHERE events.id = $1
 LIMIT 1;
 
 -- name: GetEventListByOffsetLimit :many
 SELECT *
-from events
+FROM events
 ORDER BY id
 OFFSET $1 LIMIT $2;
 

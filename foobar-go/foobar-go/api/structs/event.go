@@ -9,3 +9,13 @@ type CreateEventRequest struct {
 type CreateEventResponse struct {
 	Success bool `json:"success"`
 }
+
+type GetEventByIdRequest struct {
+	EventId int64 `uri:"id" binding:"gte=0"`
+}
+
+type GetEventByIdResponse struct {
+	Name     string `json:"name"`
+	Location string `json:"location"`
+	Datetime int64  `json:"datetime"`
+}

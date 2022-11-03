@@ -36,5 +36,23 @@ func (c EventController) CreateEvent(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, createEventResponse)
+	ctx.JSON(http.StatusCreated, createEventResponse)
+}
+
+func (c EventController) GetEventById(ctx *gin.Context) {
+	var request structs.GetEventByIdRequest
+	if err := ctx.ShouldBindUri(&request); err != nil {
+		fmt.Println("validation error")
+		fmt.Println(err)
+		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		return
+	}
+
+	response, err := c.eventService.GetEventById(ctx, request.EventId)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }
