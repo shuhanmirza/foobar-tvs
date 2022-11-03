@@ -37,7 +37,7 @@ func (c EventController) CreateEvent(ctx *gin.Context) {
 }
 
 func (c EventController) GetEventById(ctx *gin.Context) {
-	var request structs.GetEventByIdRequest
+	var request structs.GetEventByIdParamRequest
 	if err := ctx.ShouldBindUri(&request); err != nil {
 		util.HandleCommonValidationError(ctx, err)
 		return
@@ -53,7 +53,7 @@ func (c EventController) GetEventById(ctx *gin.Context) {
 }
 
 func (c EventController) GetEventListByPage(ctx *gin.Context) {
-	var request structs.GetEventListByPageRequest
+	var request structs.GetEventListByPageQueryRequest
 	if err := ctx.ShouldBindQuery(&request); err != nil {
 		util.HandleCommonValidationError(ctx, err)
 		return
@@ -66,5 +66,27 @@ func (c EventController) GetEventListByPage(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, response)
+}
 
+func (c EventController) UpdateEvent(ctx *gin.Context) {
+	var requestParam structs.UpdateEventParamRequest
+	var request structs.UpdateEventRequest
+
+	if err := ctx.ShouldBindUri(&requestParam); err != nil {
+		util.HandleCommonValidationError(ctx, err)
+		return
+	}
+
+	if err := ctx.ShouldBindJSON(&request); err != nil {
+		util.HandleCommonValidationError(ctx, err)
+		return
+	}
+
+	response, err := c.eventService.UpdateEvent(ctx, requestParam.EventId, request)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, util.ErrorResponse(err))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }

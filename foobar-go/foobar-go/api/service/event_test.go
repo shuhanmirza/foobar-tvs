@@ -22,7 +22,7 @@ func TestEventService_GetEventById(t *testing.T) {
 func TestEventService_GetEventListByPage(t *testing.T) {
 	ctx, _ := gin.CreateTestContext(httptest.NewRecorder())
 
-	response, err := eventService.GetEventListByPage(ctx, structs.GetEventListByPageRequest{
+	response, err := eventService.GetEventListByPage(ctx, structs.GetEventListByPageQueryRequest{
 		PageNumber: 0,
 		PageSize:   0,
 	})
@@ -30,4 +30,18 @@ func TestEventService_GetEventListByPage(t *testing.T) {
 	log.Println(response)
 	log.Println(err)
 
+}
+
+// TODO: write proper test
+func TestEventService_UpdateEvent(t *testing.T) {
+	ctx, _ := gin.CreateTestContext(httptest.NewRecorder())
+
+	response, err := eventService.UpdateEvent(ctx, 40, structs.UpdateEventRequest{
+		Name:       "test",
+		LocationId: 100,
+		Datetime:   1667457058,
+	})
+
+	log.Println(response)
+	log.Println(err)
 }

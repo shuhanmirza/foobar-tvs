@@ -163,7 +163,7 @@ const updateEvent = `-- name: UpdateEvent :one
 UPDATE events
 SET "name"=$2,
     location_id=$3,
-    datetime=$2
+    datetime=$4
 WHERE id = $1
 RETURNING id, location_id, name, datetime, created_at
 `
@@ -172,10 +172,16 @@ type UpdateEventParams struct {
 	ID         int64  `json:"id"`
 	Name       string `json:"name"`
 	LocationID int64  `json:"location_id"`
+	Datetime   int64  `json:"datetime"`
 }
 
 func (q *Queries) UpdateEvent(ctx context.Context, arg UpdateEventParams) (Events, error) {
-	row := q.db.QueryRowContext(ctx, updateEvent, arg.ID, arg.Name, arg.LocationID)
+	row := q.db.QueryRowContext(ctx, updateEvent,
+		arg.ID,
+		arg.Name,
+		arg.LocationID,
+		arg.Datetime,
+	)
 	var i Events
 	err := row.Scan(
 		&i.ID,

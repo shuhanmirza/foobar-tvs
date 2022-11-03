@@ -21,7 +21,7 @@ func NewEventService(store *infrastructure.Store) EventService {
 	}
 }
 
-func (s EventService) CreateEvent(ctx *gin.Context, request structs.CreateEventRequest) (createEventResponse structs.CreateEventResponse, err error) {
+func (s EventService) CreateEvent(ctx *gin.Context, request structs.CreateEventRequest) (response structs.CreateEventResponse, err error) {
 	_, err = s.store.Queries.CreateEvent(ctx, db.CreateEventParams{
 		Name:       request.Name,
 		LocationID: request.LocationId,
@@ -29,51 +29,47 @@ func (s EventService) CreateEvent(ctx *gin.Context, request structs.CreateEventR
 	})
 
 	if err != nil {
-		createEventResponse = structs.CreateEventResponse{
-			Success: false,
-		}
+		response = structs.CreateEventResponse{Success: false}
 
 		if pgErr, isPGErr := err.(*pq.Error); isPGErr {
 			if pgErr.Code == util.SQL_FOREIGN_KEY_VIOLATION_ERROR_CODE {
-				return createEventResponse, &util.InvalidLocationId{}
+				return response, &util.InvalidLocationId{}
 			}
 		}
 
 		log.Println("error while creating event")
 		log.Println(err)
-		return createEventResponse, err
+		return response, err
 
 	}
 
-	createEventResponse = structs.CreateEventResponse{
-		Success: true,
-	}
+	response = structs.CreateEventResponse{Success: true}
 
-	return createEventResponse, err
+	return response, err
 }
 
-func (s EventService) GetEventById(ctx *gin.Context, eventId int64) (getEventByIdResponse structs.GetEventByIdResponse, err error) {
+func (s EventService) GetEventById(ctx *gin.Context, eventId int64) (response structs.GetEventByIdResponse, err error) {
 	event, err := s.store.Queries.GetEventWithLocationById(ctx, eventId)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return getEventByIdResponse, &util.InvalidEventId{}
+			return response, &util.InvalidEventId{}
 		}
 
 		log.Println("error while reading event")
 		log.Println(err)
-		return getEventByIdResponse, err
+		return response, err
 	}
 
-	getEventByIdResponse = structs.GetEventByIdResponse{
+	response = structs.GetEventByIdResponse{
 		Name:     event.Name,
 		Location: event.Location,
 		Datetime: event.Datetime,
 	}
 
-	return getEventByIdResponse, err
+	return response, err
 }
 
-func (s EventService) GetEventListByPage(ctx *gin.Context, request structs.GetEventListByPageRequest) (response structs.GetEventListByPageResponse, err error) {
+func (s EventService) GetEventListByPage(ctx *gin.Context, request structs.GetEventListByPageQueryRequest) (response structs.GetEventListByPageResponse, err error) {
 	eventList, err := s.store.Queries.GetEventListByOffsetLimit(ctx, db.GetEventListByOffsetLimitParams{
 		Offset: request.PageNumber * request.PageSize,
 		Limit:  request.PageSize,
@@ -94,6 +90,7 @@ func (s EventService) GetEventListByPage(ctx *gin.Context, request structs.GetEv
 
 	for _, event := range eventList {
 		eventJsonList = append(eventJsonList, structs.EventJson{
+			Id:       event.ID,
 			Name:     event.Name,
 			Location: event.Location,
 			Datetime: event.Datetime,
@@ -101,5 +98,36 @@ func (s EventService) GetEventListByPage(ctx *gin.Context, request structs.GetEv
 	}
 
 	response = structs.GetEventListByPageResponse{Events: eventJsonList}
+	return response, err
+}
+
+func (s EventService) UpdateEvent(ctx *gin.Context, eventId int64, request structs.UpdateEventRequest) (response structs.UpdateEventResponse, err error) {
+	_, err = s.store.Queries.UpdateEvent(ctx, db.UpdateEventParams{
+		ID:         eventId,
+		Name:       request.Name,
+		LocationID: request.LocationId,
+		Datetime:   request.Datetime,
+	})
+
+	if err != nil {
+		response = structs.UpdateEventResponse{Success: false}
+
+		if err == sql.ErrNoRows {
+			return response, &util.InvalidEventId{}
+		}
+
+		if pgErr, isPGErr := err.(*pq.Error); isPGErr {
+			if pgErr.Code == util.SQL_FOREIGN_KEY_VIOLATION_ERROR_CODE {
+				return response, &util.InvalidLocationId{}
+			}
+		}
+
+		log.Println("error while updating event")
+		log.Println(err)
+		return response, err
+
+	}
+
+	response = structs.UpdateEventResponse{Success: true}
 	return response, err
 }

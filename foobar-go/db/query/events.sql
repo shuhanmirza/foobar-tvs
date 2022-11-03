@@ -37,7 +37,7 @@ OFFSET $1 LIMIT $2;
 UPDATE events
 SET "name"=$2,
     location_id=$3,
-    datetime=$2
+    datetime=$4
 WHERE id = $1
 RETURNING *;
 
