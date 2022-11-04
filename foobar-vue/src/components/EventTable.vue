@@ -212,7 +212,6 @@ export default {
         Object.assign(this.eventList[this.editedItemId], this.editedItem)
       } else {
         this.createEventApi(this.editedItem)
-        this.eventList.push(this.editedItem)
       }
       this.onCloseButtonClicked()
     },

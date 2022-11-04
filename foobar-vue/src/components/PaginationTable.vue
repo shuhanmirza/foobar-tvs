@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     showNextBtn() {
-      return this.itemCount === this.pageSize
+      return this.itemCount >= this.pageSize
     },
     showPrevBtn() {
       return this.pageNumber > 0;
