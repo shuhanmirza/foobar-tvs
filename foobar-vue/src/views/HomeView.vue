@@ -6,6 +6,7 @@
 
 <script>
 import EventTable from "@/components/EventTable";
+
 export default {
   name: 'HomeView',
   components: {
@@ -15,10 +16,11 @@ export default {
 </script>
 
 <style scoped>
-.home{
+.home {
   padding: 10px;
 }
-.event-table{
+
+.event-table {
   margin: 100px;
 }
 </style>

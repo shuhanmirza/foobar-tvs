@@ -71,7 +71,7 @@
                 Cancel
               </v-btn>
               <v-btn color="success" :disabled="!isCreateItemFormValid" text @click="onSaveButtonClick">
-                {{createEventDialogActionButtonTitle}}
+                {{ createEventDialogActionButtonTitle }}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -324,7 +324,7 @@ export default {
     createEventDialogTitle() {
       return this.editedItemId === -1 ? 'Create Event' : 'Edit Event'
     },
-    createEventDialogActionButtonTitle(){
+    createEventDialogActionButtonTitle() {
       return this.editedItemId === -1 ? 'Create' : 'Update'
     }
   },

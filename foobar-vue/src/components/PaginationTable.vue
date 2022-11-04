@@ -48,10 +48,10 @@ export default {
       return this.pageNumber > 0;
     },
     firstItemCursor() {
-      return (this.pageNumber*this.pageSize) + 1;
+      return (this.pageNumber * this.pageSize) + 1;
     },
     lastItemCursor() {
-      return (this.pageNumber*this.pageSize)+ this.itemCount;
+      return (this.pageNumber * this.pageSize) + this.itemCount;
     }
   },
   methods: {
