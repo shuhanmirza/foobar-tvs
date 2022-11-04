@@ -206,7 +206,6 @@ export default {
         this.editedItemId = -1
       })
     },
-
     onSaveButtonClick() {
       if (this.editedItemId > -1) {
         Object.assign(this.eventList[this.editedItemId], this.editedItem)
@@ -214,6 +213,14 @@ export default {
         this.createEventApi(this.editedItem)
       }
       this.onCloseButtonClicked()
+    },
+    getNext() {
+      this.pageNumber++
+      this.getEventList()
+    },
+    getPrevious() {
+      this.pageNumber--
+      this.getEventList()
     },
     createEventApi(item) {
       console.log(item)
@@ -231,14 +238,6 @@ export default {
         alert("API FAILED")
       });
     },
-    getNext() {
-      this.pageNumber++
-      this.getEventList()
-    },
-    getPrevious() {
-      this.pageNumber--
-      this.getEventList()
-    },
     getLocationList() {
       this.loading = true
       this.$API_CLIENT.get(API_PATHS.LOCATION_LIST).then(({data}) => {
@@ -246,6 +245,7 @@ export default {
         console.log(this.locationList)
       }).catch(({response}) => {
         console.log(response)
+        alert("API FAILED")
       });
       this.loading = false
     },
@@ -256,12 +256,23 @@ export default {
         page_number: this.pageNumber,
         page_size: this.pageSize
       }
+      let eventListResponse = []
       this.$API_CLIENT.getWithParam(API_PATHS.GET_EVENT_LIST, paramData).then(({data}) => {
         console.log(data)
-        this.eventList = data.events;
+
+        eventListResponse = data.events;
+        this.eventList = []
+        if (eventListResponse !== null){
+          for (let index = 0; index < eventListResponse.length; index += 1) {
+            eventListResponse.at(index).datetime = moment.unix(eventListResponse.at(index).datetime).format(CONSTANTS.TIME_FORMAT)
+            this.eventList.push(eventListResponse.at(index))
+          }
+        }
       }).catch(({response}) => {
         console.log(response)
+        alert("API FAILED")
       });
+
 
       this.loading = false
     },
@@ -272,6 +283,8 @@ export default {
 
       let date = moment('2022-11-04T08:07:05+0600', "YYYY-MM-DDTHH:mm:ssZZ")
       console.log(date.unix())
+
+      console.log(moment.unix(1667537276).format(CONSTANTS.TIME_FORMAT))
     }
   },
   computed: {
