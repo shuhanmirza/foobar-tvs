@@ -20,4 +20,8 @@ export default class ApiClient {
         return this.axios.get(url, payload)
     }
 
+    async getWithParam(url, data){
+        return this.axios.get(url, { params : data})
+    }
+
 }

@@ -5,6 +5,10 @@
         :items="eventList"
         class="elevation-2"
         style="border-radius: 16px"
+        :loading="loading"
+        :hide-default-footer="true"
+        loading-text="Loading... Please wait"
+        no-data-text="No results found for your query"
     >
 
       <template v-slot:top>
@@ -99,25 +103,35 @@
           mdi-delete
         </v-icon>
       </template>
-      <template v-slot:no-data>
-        <v-btn
-            color="primary"
-            @click="initialize"
-        >
-          Reset
-        </v-btn>
-      </template>
     </v-data-table>
+
+    <pagination-table
+        :item-count="eventList.length"
+        :pageNumber="pageNumber"
+        :is-disabled="loading"
+        :page-size="pageSize"
+        @next="getNext"
+        @previous="getPrevious"
+    ></pagination-table>
+
   </div>
 </template>
 
 <script>
 import moment from 'moment';
 import CONSTANTS from "@/util/helper";
+import PaginationTable from "@/components/PaginationTable";
+import API_PATHS from "@/util/apipath";
 
 export default {
   name: "EventTable",
+  components: {
+    PaginationTable
+  },
   data: () => ({
+    loading: false,
+    pageNumber: 0,
+    pageSize: 10,
     tableTitle: "Events",
     createItemDialog: false,
     dialogDelete: false,
@@ -151,28 +165,7 @@ export default {
   methods: {
     initialize() {
       this.getLocationList()
-      this.eventList = [
-        {
-          name: 'test event 1',
-          location: "Russia",
-          datetime: "1667404666"
-        },
-        {
-          name: 'test event 2',
-          location: "Russia",
-          datetime: "1667404666"
-        },
-        {
-          name: 'test event 3',
-          location: "Russia",
-          datetime: "1667404666"
-        },
-        {
-          name: 'test event 4',
-          location: "Russia",
-          datetime: "1667404666"
-        },
-      ]
+      this.getEventList()
     },
 
     showCreateItemDialog() {
@@ -231,7 +224,7 @@ export default {
         "datetime": moment(item.datetime, CONSTANTS.TIME_FORMAT).unix()
       }
 
-      this.$API_CLIENT.post(this.$API_PATH.CREATE_EVENT, payload).then(({data}) => {
+      this.$API_CLIENT.post(API_PATHS.CREATE_EVENT, payload).then(({data}) => {
         console.log(data)
         this.url = data.url
       }).catch(({response}) => {
@@ -239,18 +232,44 @@ export default {
         alert("API FAILED")
       });
     },
+    getNext() {
+      this.pageNumber++
+      this.getEventList()
+    },
+    getPrevious() {
+      this.pageNumber--
+      this.getEventList()
+    },
     getLocationList() {
-      this.$API_CLIENT.get(this.$API_PATH.LOCATION_LIST).then(({data}) => {
+      this.loading = true
+      this.$API_CLIENT.get(API_PATHS.LOCATION_LIST).then(({data}) => {
         this.locationList = data.location_list
         console.log(this.locationList)
       }).catch(({response}) => {
         console.log(response)
       });
+      this.loading = false
     },
-    test (){
+    getEventList() {
+      this.loading = true
+
+      let paramData = {
+        page_number: this.pageNumber,
+        page_size: this.pageSize
+      }
+      this.$API_CLIENT.getWithParam(API_PATHS.GET_EVENT_LIST, paramData).then(({data}) => {
+        console.log(data)
+        this.eventList = data.events;
+      }).catch(({response}) => {
+        console.log(response)
+      });
+
+      this.loading = false
+    },
+    test() {
       console.log(CONSTANTS.TIME_FORMAT)
-     let now = moment();
-     console.log(now.format("YYYY-MM-DDTHH:mm:ssZZ"))
+      let now = moment();
+      console.log(now.format("YYYY-MM-DDTHH:mm:ssZZ"))
 
       let date = moment('2022-11-04T08:07:05+0600', "YYYY-MM-DDTHH:mm:ssZZ")
       console.log(date.unix())
