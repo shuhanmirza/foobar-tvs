@@ -90,10 +90,11 @@ func (s EventService) GetEventListByPage(ctx *gin.Context, request structs.GetEv
 
 	for _, event := range eventList {
 		eventJsonList = append(eventJsonList, structs.EventJson{
-			Id:       event.ID,
-			Name:     event.Name,
-			Location: event.Location,
-			Datetime: event.Datetime,
+			Id:         event.ID,
+			Name:       event.Name,
+			Location:   event.Location,
+			LocationId: event.LocationID,
+			Datetime:   event.Datetime,
 		})
 	}
 

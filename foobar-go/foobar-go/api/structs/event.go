@@ -26,10 +26,11 @@ type GetEventListByPageQueryRequest struct {
 }
 
 type EventJson struct {
-	Id       int64  `json:"id"`
-	Name     string `json:"name"`
-	Location string `json:"location"`
-	Datetime int64  `json:"datetime"`
+	Id         int64  `json:"id"`
+	Name       string `json:"name"`
+	Location   string `json:"location"`
+	LocationId int64  `json:"location_id"`
+	Datetime   int64  `json:"datetime"`
 }
 
 type GetEventListByPageResponse struct {
