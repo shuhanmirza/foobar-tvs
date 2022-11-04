@@ -3,8 +3,7 @@
     <v-data-table
         :headers="headers"
         :items="eventList"
-        class="elevation-2"
-        style="border-radius: 16px"
+        class="elevation-2 data-table"
         :loading="loading"
         :hide-default-footer="true"
         loading-text="Loading... Please wait"
@@ -12,18 +11,18 @@
     >
 
       <template v-slot:top>
-        <v-card flat style="border-radius: 16px; margin-bottom: -10px">
+        <v-card flat class="data-table-title-card">
           <v-card-title color="grey darken-2 white--text">
             {{ tableTitle }}
           </v-card-title>
-          <v-card-text style="margin-top: -12px">
+          <v-card-text class="mt-n3">
             List of Events! - <span class="text-button" @click="showCreateItemDialog()"> Create </span>
           </v-card-text>
         </v-card>
 
         <v-divider/>
 
-        <v-dialog v-model="createItemDialog" max-width="500px">
+        <v-dialog v-model="createItemDialog" max-width="400px">
           <v-card>
             <v-card-title>
               <span>{{ createEventDialogTitle }}</span>
@@ -33,7 +32,7 @@
               <v-container>
                 <v-form v-model="isCreateItemFormValid" ref="createItemForm">
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col>
                       <v-text-field
                           v-model="editedItem.name"
                           label="Name"
@@ -41,7 +40,7 @@
                           required
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col>
                       <v-select
                           v-model="editedItem.location"
                           :items="locationList"
@@ -52,7 +51,9 @@
 
                       </v-select>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4" style="justify-content: center">
+                  </v-row>
+                  <v-row>
+                    <v-col>
                       <v-text-field
                           v-model="editedItem.datetime"
                           label="Datetime"
@@ -67,7 +68,7 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="onCloseButtonClicked">
+              <v-btn color="primary" text @click="onCloseButtonClicked">
                 Cancel
               </v-btn>
               <v-btn color="success" :disabled="!isCreateItemFormValid" text @click="onSaveButtonClick">
@@ -350,5 +351,18 @@ export default {
   color: blue;
   font-weight: bolder;
   text-decoration: underline;
+}
+
+.data-table {
+  border-radius: 16px
+}
+
+.data-table-title-card {
+  border-radius: 16px;
+  margin-bottom: -10px
+}
+
+.data-table-page-size-div {
+  margin: 10px;
 }
 </style>
