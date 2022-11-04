@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "446e9a1c-604d-44a6-bbd8-4302d2b7af53",
+		"name": "foobar-tvs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4531605"
+	},
+	"item": [
+		{
+			"name": "status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "status",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								""
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 03 Nov 2022 07:35:28 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "15"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"up\"\n}"
+				}
+			]
+		},
+		{
+			"name": "get locations",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/config/location-list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"config",
+						"location-list"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get locations",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/config/location-list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"config",
+								"location-list"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 03 Nov 2022 07:26:15 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "450"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"location_list\": [\n        {\n            \"id\": 1,\n            \"name\": \"Bangladesh\",\n            \"created_at\": \"2022-11-02T11:39:06.512892Z\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"United Kingdom\",\n            \"created_at\": \"2022-11-02T11:39:06.512892Z\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"United States\",\n            \"created_at\": \"2022-11-02T11:39:06.512892Z\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"India\",\n            \"created_at\": \"2022-11-02T11:39:06.512892Z\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Netherlands\",\n            \"created_at\": \"2022-11-02T11:39:06.512892Z\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Russia\",\n            \"created_at\": \"2022-11-02T11:39:06.512892Z\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "create event",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"test event\",\n    \"location_id\":5,\n    \"datetime\": 1667404666\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/events/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"events",
+						""
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "create event",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"test event\",\n    \"location_id\":5,\n    \"datetime\": 1667404666\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/events/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"events",
+								""
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 03 Nov 2022 07:26:49 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "get event",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/events/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"events",
+						"2"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get event",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/api/events/43",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"events",
+								"43"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 03 Nov 2022 07:28:09 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "68"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"name\": \"test event\",\n    \"location\": \"Netherlands\",\n    \"datetime\": 1667404666\n}"
+				}
+			]
+		},
+		{
+			"name": "get event list by page",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/events/?page_number=0&page_size=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"events",
+						""
+					],
+					"query": [
+						{
+							"key": "page_number",
+							"value": "0"
+						},
+						{
+							"key": "page_size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "get event list by page",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/api/events/?page_number=0&page_size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"events",
+								""
+							],
+							"query": [
+								{
+									"key": "page_number",
+									"value": "0"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 04 Nov 2022 06:12:32 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "954"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"events\": [\n        {\n            \"id\": 47,\n            \"name\": \"test event\",\n            \"location\": \"United Kingdom\",\n            \"location_id\": 2,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 48,\n            \"name\": \"test event\",\n            \"location\": \"Netherlands\",\n            \"location_id\": 5,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 49,\n            \"name\": \"test event\",\n            \"location\": \"United Kingdom\",\n            \"location_id\": 2,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 51,\n            \"name\": \"test event\",\n            \"location\": \"Netherlands\",\n            \"location_id\": 5,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 52,\n            \"name\": \"test event\",\n            \"location\": \"United Kingdom\",\n            \"location_id\": 2,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 53,\n            \"name\": \"test event\",\n            \"location\": \"Netherlands\",\n            \"location_id\": 5,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 55,\n            \"name\": \"test event\",\n            \"location\": \"United Kingdom\",\n            \"location_id\": 2,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 58,\n            \"name\": \"test event\",\n            \"location\": \"Netherlands\",\n            \"location_id\": 5,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 68,\n            \"name\": \"test event\",\n            \"location\": \"Netherlands\",\n            \"location_id\": 5,\n            \"datetime\": 1667404666\n        },\n        {\n            \"id\": 69,\n            \"name\": \"test event\",\n            \"location\": \"Netherlands\",\n            \"location_id\": 5,\n            \"datetime\": 1667404666\n        }\n    ]\n}"
+				},
+				{
+					"name": "get event list by page",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/api/events/?page_number=3&page_size=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"events",
+								""
+							],
+							"query": [
+								{
+									"key": "page_number",
+									"value": "3"
+								},
+								{
+									"key": "page_size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Headers",
+							"value": "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With"
+						},
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST, OPTIONS, GET, PUT, DELETE"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Fri, 04 Nov 2022 06:13:00 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "15"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"events\": null\n}"
+				}
+			]
+		},
+		{
+			"name": "update event",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"test event\",\n    \"location_id\":3,\n    \"datetime\": 1667404666\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9000/api/events/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"events",
+						"6"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "update event",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"test event\",\n    \"location_id\":3,\n    \"datetime\": 1667404666\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9000/api/events/43",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"events",
+								"43"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 03 Nov 2022 07:28:49 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true\n}"
+				}
+			]
+		},
+		{
+			"name": "delete event",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9000/api/events/6",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"events",
+						"6"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "delete event",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:9000/api/events/39",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9000",
+							"path": [
+								"api",
+								"events",
+								"39"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 03 Nov 2022 07:29:11 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true\n}"
+				}
+			]
+		}
+	]
+}
