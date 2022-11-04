@@ -3,7 +3,7 @@
     <v-data-table
         :headers="headers"
         :items="eventList"
-        class="elevation-21"
+        class="elevation-2"
         style="border-radius: 16px"
     >
 
@@ -27,29 +27,37 @@
 
             <v-card-text>
               <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                        v-model="editedItem.name"
-                        label="Name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-select
-                        v-model="editedItem.location"
-                        :items="locationList"
-                        item-text="name"
-                        item-value="id"
-                        label="Location"
-                    ></v-select>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                        v-model="editedItem.datetime"
-                        label="Time"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
+                <v-form v-model="isCreateItemFormValid" ref="createItemForm">
+                  <v-row>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-text-field
+                          v-model="editedItem.name"
+                          label="Name"
+                          :rules="[nameRules.required, nameRules.policy]"
+                          required
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                      <v-select
+                          v-model="editedItem.location"
+                          :items="locationList"
+                          item-text="name"
+                          label="Location"
+                          return-object
+                      >
+
+                      </v-select>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4" style="justify-content: center">
+                      <v-text-field
+                          v-model="editedItem.datetime"
+                          label="Datetime"
+                          :rules="[datetimeRules.required, datetimeRules.policy]"
+                          required
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-form>
               </v-container>
             </v-card-text>
 
@@ -58,7 +66,7 @@
               <v-btn color="blue darken-1" text @click="onCloseButtonClicked">
                 Cancel
               </v-btn>
-              <v-btn color="blue darken-1" text @click="onSaveButtonClick">
+              <v-btn color="success" :disabled="!isCreateItemFormValid" text @click="onSaveButtonClick">
                 Create
               </v-btn>
             </v-card-actions>
@@ -104,6 +112,9 @@
 </template>
 
 <script>
+import moment from 'moment';
+import CONSTANTS from "@/util/helper";
+
 export default {
   name: "EventTable",
   data: () => ({
@@ -117,13 +128,25 @@ export default {
       {text: 'Actions', value: 'actions', sortable: false},
     ],
     eventList: [],
-    locationList : [],
+    locationList: [],
     editedItemId: -1,
     editedItem: {
-      name: '', location: 0, datetime: 0,
+      name: '', location: {}, datetime: 0,
     },
     defaultItem: {
-      name: '', location: 0, datetime: 0,},
+      name: '', location: {}, datetime: moment().format(CONSTANTS.TIME_FORMAT)
+    },
+    nameRules: {
+      required: v => !!v || 'Name is required',
+      policy: v => v.length >= 3 ||
+          'Name must have minimum of three characters'
+    },
+    datetimeRules: {
+      required: v => !!v || 'Datetime is required',
+      policy: v => (moment(v, CONSTANTS.TIME_FORMAT).isValid() && v.length === 24) ||
+          'Please follow 2022-11-04T08:18:48+0600 format'
+    },
+    isCreateItemFormValid: true
   }),
   methods: {
     initialize() {
@@ -154,6 +177,8 @@ export default {
 
     showCreateItemDialog() {
       this.editedItemId = -1
+      this.editedItem.location = this.locationList.at(0)
+      this.editedItem.datetime = moment().format(CONSTANTS.TIME_FORMAT)
       this.createItemDialog = true
     },
     editItem(item) {
@@ -198,12 +223,12 @@ export default {
       }
       this.onCloseButtonClicked()
     },
-    createEventApi(item){
+    createEventApi(item) {
       console.log(item)
       let payload = {
-        "name":"test event",
-        "location_id":5,
-        "datetime": 1667404666
+        "name": item.name,
+        "location_id": item.location.id,
+        "datetime": moment(item.datetime, CONSTANTS.TIME_FORMAT).unix()
       }
 
       this.$API_CLIENT.post(this.$API_PATH.CREATE_EVENT, payload).then(({data}) => {
@@ -211,6 +236,7 @@ export default {
         this.url = data.url
       }).catch(({response}) => {
         console.log(response)
+        alert("API FAILED")
       });
     },
     getLocationList() {
@@ -220,6 +246,14 @@ export default {
       }).catch(({response}) => {
         console.log(response)
       });
+    },
+    test (){
+      console.log(CONSTANTS.TIME_FORMAT)
+     let now = moment();
+     console.log(now.format("YYYY-MM-DDTHH:mm:ssZZ"))
+
+      let date = moment('2022-11-04T08:07:05+0600', "YYYY-MM-DDTHH:mm:ssZZ")
+      console.log(date.unix())
     }
   },
   computed: {
@@ -237,6 +271,7 @@ export default {
   },
 
   created() {
+    this.test()
     this.initialize()
   }
 }

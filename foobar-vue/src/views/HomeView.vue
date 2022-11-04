@@ -17,7 +17,6 @@ export default {
 <style scoped>
 .home{
   padding: 10px;
-  background: #F7FBFC;
 }
 .event-table{
   margin: 100px;

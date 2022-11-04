@@ -1,7 +1,7 @@
 <template>
-  <div id="app">
+  <v-app class="app">
     <router-view/>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -11,10 +11,11 @@ export default {
 }
 </script>
 
-<style>
-#app {
+<style scoped>
+.app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #F7FBFC;
 }
 </style>
