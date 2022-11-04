@@ -24,4 +24,8 @@ export default class ApiClient {
         return this.axios.get(url, { params : data})
     }
 
+    async delete(url, payload){
+        return this.axios.delete(url, payload)
+    }
+
 }

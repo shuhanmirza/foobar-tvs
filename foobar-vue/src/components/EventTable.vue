@@ -76,13 +76,13 @@
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-dialog v-model="dialogDelete" max-width="500px">
+        <v-dialog v-model="dialogDelete" max-width="510px">
           <v-card>
-            <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
+            <v-card-title class="text-h5">Are you sure you want to delete this event?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="success" text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="warning" text @click="deleteItemConfirm">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
@@ -144,6 +144,7 @@ export default {
     eventList: [],
     locationList: [],
     editedItemId: -1,
+    editedItemIndex: -1,
     editedItem: {
       name: '', location: {}, datetime: 0,
     },
@@ -164,8 +165,8 @@ export default {
   }),
   methods: {
     initialize() {
-      this.getLocationList()
-      this.getEventList()
+      this.getLocationListApi()
+      this.getEventListApi()
     },
 
     showCreateItemDialog() {
@@ -181,13 +182,16 @@ export default {
     },
 
     deleteItem(item) {
-      this.editedItemId = this.eventList.indexOf(item)
+      this.editedItemId = item.id
       this.editedItem = Object.assign({}, item)
       this.dialogDelete = true
     },
 
     deleteItemConfirm() {
-      this.eventList.splice(this.editedItemId, 1)
+      this.deleteEventApi(this.editedItemId)
+      this.$nextTick( () => {
+        this.getEventListApi()
+      })
       this.closeDelete()
     },
 
@@ -216,11 +220,11 @@ export default {
     },
     getNext() {
       this.pageNumber++
-      this.getEventList()
+      this.getEventListApi()
     },
     getPrevious() {
       this.pageNumber--
-      this.getEventList()
+      this.getEventListApi()
     },
     createEventApi(item) {
       console.log(item)
@@ -238,7 +242,7 @@ export default {
         alert("API FAILED")
       });
     },
-    getLocationList() {
+    getLocationListApi() {
       this.loading = true
       this.$API_CLIENT.get(API_PATHS.LOCATION_LIST).then(({data}) => {
         this.locationList = data.location_list
@@ -249,7 +253,7 @@ export default {
       });
       this.loading = false
     },
-    getEventList() {
+    getEventListApi() {
       this.loading = true
 
       let paramData = {
@@ -262,20 +266,32 @@ export default {
 
         eventListResponse = data.events;
         this.eventList = []
-        if (eventListResponse !== null){
+        if (eventListResponse !== null) {
           for (let index = 0; index < eventListResponse.length; index += 1) {
             eventListResponse.at(index).datetime = moment.unix(eventListResponse.at(index).datetime).format(CONSTANTS.TIME_FORMAT)
             this.eventList.push(eventListResponse.at(index))
           }
         }
+
       }).catch(({response}) => {
         console.log(response)
         alert("API FAILED")
       });
 
-
       this.loading = false
     },
+
+    deleteEventApi(eventId) {
+      this.loading = true
+      this.$API_CLIENT.delete(API_PATHS.DELETE_EVENT + eventId).then(({data}) => {
+        console.log(data)
+      }).catch(({response}) => {
+        console.log(response)
+        alert("API FAILED")
+      });
+      this.loading = false
+    },
+
     test() {
       console.log(CONSTANTS.TIME_FORMAT)
       let now = moment();
