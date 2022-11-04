@@ -5,7 +5,7 @@
              :disabled="isDisabled"
              @click="emitPrevious"
              outlined
-             color="#e2136e"
+             color="primary"
              style="margin-right: 10px">
         <v-icon left>
           mdi-arrow-left
@@ -17,7 +17,7 @@
           @click="emitNext"
           v-if="showNextBtn"
           outlined
-          color="#e2136e">
+          color="primary">
         Next
         <v-icon
             right

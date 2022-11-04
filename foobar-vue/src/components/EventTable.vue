@@ -68,10 +68,10 @@
 
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" text @click="onCloseButtonClicked">
+              <v-btn color="primary" outlined @click="onCloseButtonClicked">
                 Cancel
               </v-btn>
-              <v-btn color="success" :disabled="!isCreateItemFormValid" text @click="onSaveButtonClick">
+              <v-btn color="success" outlined :disabled="!isCreateItemFormValid" @click="onSaveButtonClick">
                 {{ createEventDialogActionButtonTitle }}
               </v-btn>
             </v-card-actions>
@@ -82,8 +82,8 @@
             <v-card-title class="text-h5">Are you sure you want to delete this event?</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="success" text @click="closeDelete">Cancel</v-btn>
-              <v-btn color="warning" text @click="deleteItemConfirm">OK</v-btn>
+              <v-btn color="success" outlined @click="closeDelete">Cancel</v-btn>
+              <v-btn color="warning" outlined @click="deleteItemConfirm">OK</v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
           </v-card>
