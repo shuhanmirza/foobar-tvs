@@ -71,7 +71,7 @@
                 Cancel
               </v-btn>
               <v-btn color="success" :disabled="!isCreateItemFormValid" text @click="onSaveButtonClick">
-                Create
+                {{createEventDialogActionButtonTitle}}
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -98,6 +98,7 @@
         </v-icon>
         <v-icon
             small
+            class="ml-2"
             @click="deleteItem(item)"
         >
           mdi-delete
@@ -176,8 +177,9 @@ export default {
       this.createItemDialog = true
     },
     editItem(item) {
-      this.editedItemId = this.eventList.indexOf(item)
+      this.editedItemId = item.id
       this.editedItem = Object.assign({}, item)
+      this.editedItem.location = this.locationList.find(location => location.id === item.location_id)
       this.createItemDialog = true
     },
 
@@ -189,9 +191,6 @@ export default {
 
     deleteItemConfirm() {
       this.deleteEventApi(this.editedItemId)
-      this.$nextTick( () => {
-        this.getEventListApi()
-      })
       this.closeDelete()
     },
 
@@ -212,7 +211,7 @@ export default {
     },
     onSaveButtonClick() {
       if (this.editedItemId > -1) {
-        Object.assign(this.eventList[this.editedItemId], this.editedItem)
+        this.updateEventApi(this.editedItemId, this.editedItem)
       } else {
         this.createEventApi(this.editedItem)
       }
@@ -227,7 +226,6 @@ export default {
       this.getEventListApi()
     },
     createEventApi(item) {
-      console.log(item)
       let payload = {
         "name": item.name,
         "location_id": item.location.id,
@@ -236,7 +234,25 @@ export default {
 
       this.$API_CLIENT.post(API_PATHS.CREATE_EVENT, payload).then(({data}) => {
         console.log(data)
-        this.url = data.url
+        this.getEventListApi()
+      }).catch(({response}) => {
+        console.log(response)
+        alert("API FAILED")
+      });
+    },
+    updateEventApi(itemId, item) {
+      console.log(item)
+      let payload = {
+        "name": item.name,
+        "location_id": item.location.id,
+        "datetime": moment(item.datetime, CONSTANTS.TIME_FORMAT).unix()
+      }
+
+      console.log(payload)
+
+      this.$API_CLIENT.put(API_PATHS.UPDATE_EVENT + itemId, payload).then(({data}) => {
+        console.log(data)
+        this.getEventListApi()
       }).catch(({response}) => {
         console.log(response)
         alert("API FAILED")
@@ -245,8 +261,8 @@ export default {
     getLocationListApi() {
       this.loading = true
       this.$API_CLIENT.get(API_PATHS.LOCATION_LIST).then(({data}) => {
+        console.log(data)
         this.locationList = data.location_list
-        console.log(this.locationList)
       }).catch(({response}) => {
         console.log(response)
         alert("API FAILED")
@@ -281,10 +297,11 @@ export default {
       this.loading = false
     },
 
-    deleteEventApi(eventId) {
+    deleteEventApi(itemId) {
       this.loading = true
-      this.$API_CLIENT.delete(API_PATHS.DELETE_EVENT + eventId).then(({data}) => {
+      this.$API_CLIENT.delete(API_PATHS.DELETE_EVENT + itemId).then(({data}) => {
         console.log(data)
+        this.getEventListApi()
       }).catch(({response}) => {
         console.log(response)
         alert("API FAILED")
@@ -307,6 +324,9 @@ export default {
     createEventDialogTitle() {
       return this.editedItemId === -1 ? 'Create Event' : 'Edit Event'
     },
+    createEventDialogActionButtonTitle(){
+      return this.editedItemId === -1 ? 'Create' : 'Update'
+    }
   },
   watch: {
     dialog(val) {

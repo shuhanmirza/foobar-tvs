@@ -28,4 +28,8 @@ export default class ApiClient {
         return this.axios.delete(url, payload)
     }
 
+    async put(url, payload){
+        return this.axios.put(url, payload)
+    }
+
 }
