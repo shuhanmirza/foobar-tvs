@@ -1,24 +1,5 @@
 version: '3.1'
 services:
-  goserver:
-    build:
-      context: .
-      dockerfile: DockerFiles/GoDockerFile
-    restart: unless-stopped
-    container_name: goserver-foobar
-    ports:
-       - "9000:9000"
-       
-  vueserver:
-    build:
-      context: .
-      dockerfile: DockerFiles/VueDockerFile
-    restart: unless-stopped
-    container_name: vueserver-foobar
-    
-    ports:
-       - "8080:8080"
-
 
   database:
     image: postgres:14-alpine
@@ -30,6 +11,32 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: foobar-db
+
+  goserver:
+    build:
+      context: .
+      dockerfile: DockerFiles/GoDockerFile
+    restart: unless-stopped
+    container_name: goserver-foobar
+    ports:
+       - "9000:9000"
+    depends_on:
+      database:
+        condition: 
+          service_started
+       
+  vueserver:
+    build:
+      context: .
+      dockerfile: DockerFiles/VueDockerFile
+    restart: unless-stopped
+    container_name: vueserver-foobar
+    depends_on:
+      goserver:
+        condition: 
+          service_started
+    ports:
+       - "8080:8080"
 
 
 networks:
