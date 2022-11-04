@@ -28,18 +28,18 @@ services:
         condition: 
            service_healthy
 
-  # goserver:
-  #   build:
-  #     context: .
-  #     dockerfile: DockerFiles/GoDockerFile
-  #   restart: unless-stopped
-  #   container_name: goserver-foobar
-  #   ports:
-  #      - "9000:9000"
-  #   depends_on:
-  #     migration:
-  #       condition: 
-  #         service_completed_successfully
+  goserver:
+    build:
+      context: .
+      dockerfile: DockerFiles/GoDockerFile
+    restart: unless-stopped
+    container_name: goserver-foobar
+    ports:
+       - "9000:9000"
+    depends_on:
+      migration:
+        condition: 
+          service_completed_successfully
        
   vueserver:
     build:
@@ -47,10 +47,10 @@ services:
       dockerfile: DockerFiles/VueDockerFile
     restart: unless-stopped
     container_name: vueserver-foobar
-    # depends_on:
-    #   goserver:
-    #     condition: 
-    #       service_started
+    depends_on:
+      goserver:
+        condition: 
+          service_started
     ports:
        - "8080:8080"
 
